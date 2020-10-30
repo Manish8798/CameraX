@@ -1,15 +1,23 @@
 package com.example.beadcoretask;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,10 +37,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -47,16 +60,17 @@ public class MainActivity extends AppCompatActivity {
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final int REQ_CODE_PERMISSION = 1001;
     private final String[] REQ_PERMS = new String[]{
-            "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"
+            "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.ACCESS_FINE_LOCATION"
     };
 
     private List<UseCase> mUseCases;
     private ExecutorService mImageCaptureExecutorService;
-
-
+    FusedLocationProviderClient fusedLocationProviderClient;
     PreviewView previewView;
     Button capture, gallery;
     Preview preview;
+    TextView textView1, textView2, textView3, textView4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +80,74 @@ public class MainActivity extends AppCompatActivity {
         previewView = findViewById(R.id.viewFinder);
         capture = findViewById(R.id.capture);
         gallery = findViewById(R.id.gallery);
+        textView1 = findViewById(R.id.textView1);
+        textView2 = findViewById(R.id.textView2);
+        textView3 = findViewById(R.id.textView3);
+        textView4 = findViewById(R.id.textView4);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mImageCaptureExecutorService = Executors.newSingleThreadExecutor();
 
-        if(allPermissionsGranted()){
+        if (allPermissionsGranted()) {
             startCamera();
-        } else{
+            getUserLocation();
+        } else {
             ActivityCompat.requestPermissions(this, REQ_PERMS,
                     REQ_CODE_PERMISSION);
         }
+//        if(ActivityCompat.checkSelfPermission(MainActivity.this,
+//                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+//            getUserLocation();
+//        }else {
+//            ActivityCompat.requestPermissions(MainActivity.this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+//        }
 
+    }
+
+    private void getUserLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                Location location = task.getResult();
+                if(location != null){
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(
+                                location.getLatitude(), location.getLongitude(), 1
+                        );
+                        textView1.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Latitude : </b><b></font>"
+                                +addresses.get(0).getLatitude()
+                        ));
+                        textView2.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Longitude : </b><b></font>"
+                                        +addresses.get(0).getLongitude()
+                        ));
+                        textView3.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Country : </b><b></font>"
+                                        +addresses.get(0).getCountryName()
+                        ));
+                        textView4.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Locality : </b><b></font>"
+                                        +addresses.get(0).getLocality()
+                        ));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     private void startCamera() {
@@ -118,8 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 imageAnalysis, preview);
 
         capture.setOnClickListener(v -> {
-            try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+
             createDefaultFolderIfNotExist();
 //                File file = new File(getBatchDirectoryName(),
 //                        "Test_"+dateFormat.format(new Date())+".jpg");
@@ -137,8 +208,15 @@ public class MainActivity extends AppCompatActivity {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d( "Saved", outputFileResults.getSavedUri().toString());
-                            Toast.makeText(MainActivity.this, "Image Saved", Toast.LENGTH_SHORT).show();
+                            try {
+                                Thread.sleep(2000);
+                                Log.d( "Saved", outputFileResults.getSavedUri().toString());
+                                Toast.makeText(MainActivity.this, "Image Saved",
+                                        Toast.LENGTH_SHORT).show();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
                         }
                     });
                 }
@@ -147,11 +225,11 @@ public class MainActivity extends AppCompatActivity {
                 public void onError(@NonNull ImageCaptureException exception) {
                     exception.printStackTrace();
                 }
-            });} catch (Exception e){
-
-            }
+            });
         });
     }
+
+
 
 
     public void createDefaultFolderIfNotExist(){
@@ -189,5 +267,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mImageCaptureExecutorService.shutdown();
+    }
+
+    public void gallery(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/Pictures/");
+        intent.setDataAndType(uri, "image/jpeg");
+        startActivity(Intent.createChooser(intent, "Gallery"));
     }
 }
