@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:padding="2dp"
+            android:paddingLeft="5dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
@@ -35,7 +35,8 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:padding="2dp"
+            android:paddingLeft="5dp"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -44,7 +45,7 @@
 
         <TextView
             android:id="@+id/textView3"
-            android:padding="2dp"
+            android:paddingRight="5dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
@@ -54,8 +55,8 @@
 
         <TextView
             android:id="@+id/textView4"
-            android:padding="2dp"
             android:layout_below="@+id/textView3"
+            android:paddingRight="5dp"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -64,15 +65,14 @@
 
     </RelativeLayout>
 
-
-
     <Button
         android:id="@+id/capture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="50dp"
-        android:text="Capture"
-        android:layout_marginRight="25dp"
+        android:background="@drawable/ic_baseline_photo_camera_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guideline">
 
@@ -81,13 +81,13 @@
     <Button
         android:id="@+id/gallery"
         android:onClick="gallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="50dp"
-        android:text="Gallery"
-        android:layout_marginLeft="25dp"
+        android:background="@drawable/ic_baseline_arrow_circle_down_24"
+        android:layout_marginLeft="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/guideline">
+        app:layout_constraintLeft_toRightOf="@+id/capture">
 
     </Button>
 
