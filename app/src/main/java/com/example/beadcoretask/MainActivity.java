@@ -15,6 +15,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
@@ -48,6 +49,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -61,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
     private final int REQ_CODE_PERMISSION = 1001;
     private final String[] REQ_PERMS = new String[]{
             "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE",
-            "android.permission.ACCESS_FINE_LOCATION"
+            "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"
     };
 
-    private List<UseCase> mUseCases;
+//    private List<UseCase> mUseCases;
     private ExecutorService mImageCaptureExecutorService;
     FusedLocationProviderClient fusedLocationProviderClient;
     PreviewView previewView;
@@ -74,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
     String file_name;
     RelativeLayout relativeLayout_main;
     TextView textView1, textView2, textView3, textView4;
-    List<Address> addresses;
+    List<Address> addresses = new ArrayList<>();
+    String add = "unknown";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +114,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUserLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -149,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                                     "<font color = '#6200E'><b>Locality : </b><b></font>"
                                             + addresses.get(0).getLocality()
                             ));
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -213,28 +220,42 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                     Activity activity = MainActivity.this;
+//                    activity.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+////                                Thread.sleep(1000);
+//
+//                                Log.d( "Saved", outputFileResults.getSavedUri().toString());
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    });
+
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-//                                Toast.makeText(MainActivity.this,
-//                                        textView4.getText().toString(),
-//                                        Toast.LENGTH_SHORT).show();
-                                Thread.sleep(1000);
-                                Log.d( "Saved", outputFileResults.getSavedUri().toString());
-                            }catch (Exception e){
-                                e.printStackTrace();
+                                add = addresses.get(0).getAddressLine(0);
+                                prevBmp = previewView.getBitmap();
+                                Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
+                                prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
+                                prevIntent.putExtra("name", file_name);
+                                prevIntent.putExtra("address", add);
+                                MainActivity.this.startActivity(prevIntent);
+                                MainActivity.this.finish();
                             }
-
+                            catch (Exception e){
+                                e.printStackTrace();
+                                Toast.makeText(MainActivity.this, "Turn Location ON & Restart App", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
-                    prevBmp = previewView.getBitmap();
-                    Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
-                    prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
-                    prevIntent.putExtra("name", file_name);
-                    prevIntent.putExtra("address", addresses.get(0).getAddressLine(0));
-                    MainActivity.this.startActivity(prevIntent);
-                    MainActivity.this.finish();
+
+
+
                 }
 
                 @Override
@@ -248,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
     private String saveBitmap(Bitmap prevBmp) {
 
         try {
-            file_name = addresses.get(0).getCountryName()+"_"+System.currentTimeMillis()
-                    +"_"+addresses.get(0).getLocality();
+            file_name = System.currentTimeMillis()
+                    +"_"+addresses.get(0).getLocality()+"_"+addresses.get(0).getCountryName();
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             prevBmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -290,20 +311,21 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()){
             startCamera();
             getUserLocation();
-        }else {
+        }
+        else {
 //            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
 //            this.finish();
             AlertDialog.Builder alertDialogueBuilder = new AlertDialog.Builder(this);
             alertDialogueBuilder.setTitle("Allow All Permissions");
-            alertDialogueBuilder.setMessage("Click YES to exit!")
+            alertDialogueBuilder.setMessage("Restart App!")
                     .setCancelable(false)
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //code
                             System.exit(0);
                         }
-                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    }).setNegativeButton("Stay", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -316,16 +338,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void gallery(View view) {
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/Pictures/");
+//        intent.setDataAndType(uri, "image/jpeg");
+//        startActivity(Intent.createChooser(intent, "Gallery"));
+
+        Intent intent = new Intent(this, GalleryAct.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mImageCaptureExecutorService.shutdown();
-    }
-
-    public void gallery(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/Pictures/");
-        intent.setDataAndType(uri, "image/jpeg");
-        startActivity(Intent.createChooser(intent, "Gallery"));
     }
 }

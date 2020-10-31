@@ -19,8 +19,9 @@ public class ImageActivity extends AppCompatActivity {
 
     TextView file_name;
     Bitmap src;
-    String address;
+    String address, name;
     ImageView imageView;
+    DataBaseHandler dataBaseHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,8 +29,10 @@ public class ImageActivity extends AppCompatActivity {
         imageView = findViewById(R.id.image_view);
         file_name = findViewById(R.id.file_name);
 
+        dataBaseHandler = new DataBaseHandler(this);
+
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        name = intent.getStringExtra("name");
         address = intent.getStringExtra("address");
         if(getIntent()!= null){
             try {
@@ -55,5 +58,19 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     public void save_btn(View view) {
+        try {
+            if (imageView.getDrawable() != null){
+                dataBaseHandler.storeImage(new ModelClass(name, src));
+            }
+            else {
+                Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+            }
+            Intent backIntent = new Intent(this, MainActivity.class);
+            this.startActivity(backIntent);
+            this.finish();
+        }
+        catch (Exception e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
