@@ -2,8 +2,10 @@ package com.example.beadcoretask;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -123,8 +125,10 @@ public class MainActivity extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
             Toast.makeText(this, "Allow Location Permission", Toast.LENGTH_SHORT).show();
-        } else {
+        }
+        else {
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
@@ -132,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     if (location != null) {
                         Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                         try {
-                             addresses = geocoder.getFromLocation(
+                            addresses = geocoder.getFromLocation(
                                     location.getLatitude(), location.getLongitude(), 1
                             );
                             textView1.setText(Html.fromHtml(
@@ -234,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
                     prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
                     prevIntent.putExtra("name", file_name);
+                    prevIntent.putExtra("address", addresses.get(0).getAddressLine(0));
                     MainActivity.this.startActivity(prevIntent);
                     MainActivity.this.finish();
                 }
@@ -290,9 +295,28 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()){
             startCamera();
+            getUserLocation();
         }else {
-            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
-            this.finish();
+//            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
+//            this.finish();
+            AlertDialog.Builder alertDialogueBuilder = new AlertDialog.Builder(this);
+            alertDialogueBuilder.setTitle("Allow Permissions");
+            alertDialogueBuilder.setMessage("Click YES to exit!")
+                    .setCancelable(false)
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //code
+                            System.exit(0);
+                        }
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog = alertDialogueBuilder.create();
+            alertDialog.show();
 
         }
 

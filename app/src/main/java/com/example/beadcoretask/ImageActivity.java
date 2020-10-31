@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -19,6 +20,7 @@ public class ImageActivity extends AppCompatActivity {
 
     TextView file_name;
     Bitmap src;
+    String address;
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class ImageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
+        address = intent.getStringExtra("address");
         if(getIntent()!= null){
             try {
                 src = BitmapFactory.decodeStream(openFileInput(name));
@@ -38,7 +41,16 @@ public class ImageActivity extends AppCompatActivity {
         }
         file_name.setText(name);
         Glide.with(this).asBitmap().load(src).into(imageView);
+
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(ImageActivity.this, address, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
     }
+
 
     public void clear_btn(View view) {
         Intent backIntent = new Intent(this, MainActivity.class);
