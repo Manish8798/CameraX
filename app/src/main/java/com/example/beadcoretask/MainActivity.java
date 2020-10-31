@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     String file_name;
     RelativeLayout relativeLayout_main;
     TextView textView1, textView2, textView3, textView4;
+    List<Address> addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     if (location != null) {
                         Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                         try {
-                            List<Address> addresses = geocoder.getFromLocation(
+                             addresses = geocoder.getFromLocation(
                                     location.getLatitude(), location.getLongitude(), 1
                             );
                             textView1.setText(Html.fromHtml(
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                     prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
                     prevIntent.putExtra("name", file_name);
                     MainActivity.this.startActivity(prevIntent);
-                    relativeLayout_main.setVisibility(View.GONE);
+                    MainActivity.this.finish();
                 }
 
                 @Override
@@ -246,9 +247,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String saveBitmap(Bitmap prevBmp) {
-          file_name =  textView3.getText().toString()+"_"+System.currentTimeMillis()
-                +"_"+textView4.getText().toString();
+
         try {
+            file_name = addresses.get(0).getCountryName()+"_"+System.currentTimeMillis()
+                    +"_"+addresses.get(0).getLocality();
+
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             prevBmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
             FileOutputStream fo = openFileOutput(file_name, Context.MODE_PRIVATE);

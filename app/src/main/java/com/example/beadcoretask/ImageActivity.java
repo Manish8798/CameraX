@@ -42,8 +42,8 @@ public class ImageActivity extends AppCompatActivity {
 
     public void clear_btn(View view) {
         Intent backIntent = new Intent(this, MainActivity.class);
-        startActivity(backIntent);
-        finish();
+        this.startActivity(backIntent);
+        this.finish();
     }
 
     public void save_btn(View view) {
