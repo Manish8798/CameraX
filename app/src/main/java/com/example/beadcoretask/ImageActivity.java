@@ -1,16 +1,15 @@
 package com.example.beadcoretask;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
@@ -42,12 +41,9 @@ public class ImageActivity extends AppCompatActivity {
         file_name.setText(name);
         Glide.with(this).asBitmap().load(src).into(imageView);
 
-        imageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(ImageActivity.this, address, Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        imageView.setOnLongClickListener(v -> {
+            Toast.makeText(ImageActivity.this, address, Toast.LENGTH_SHORT).show();
+            return false;
         });
     }
 

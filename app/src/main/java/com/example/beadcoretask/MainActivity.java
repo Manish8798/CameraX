@@ -15,7 +15,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
@@ -27,9 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
@@ -40,7 +37,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -52,8 +48,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -63,7 +57,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final Executor executor = Executors.newSingleThreadExecutor();
+//    private final Executor executor = Executors.newSingleThreadExecutor();
     private final int REQ_CODE_PERMISSION = 1001;
     private final String[] REQ_PERMS = new String[]{
             "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -300,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
 //            this.finish();
             AlertDialog.Builder alertDialogueBuilder = new AlertDialog.Builder(this);
-            alertDialogueBuilder.setTitle("Allow Permissions");
+            alertDialogueBuilder.setTitle("Allow All Permissions");
             alertDialogueBuilder.setMessage("Click YES to exit!")
                     .setCancelable(false)
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
