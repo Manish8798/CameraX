@@ -3,8 +3,10 @@ package com.example.beadcoretask;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,6 +19,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
     PreviewView previewView;
     Button capture, gallery;
     Preview preview;
+    Bitmap prevBmp;
+    String file_name;
+    RelativeLayout relativeLayout_main;
     TextView textView1, textView2, textView3, textView4;
 
     @Override
@@ -78,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         previewView = findViewById(R.id.viewFinder);
+        relativeLayout_main = findViewById(R.id.relative_layout);
         capture = findViewById(R.id.capture);
         gallery = findViewById(R.id.gallery);
         textView1 = findViewById(R.id.textView1);
@@ -114,40 +122,41 @@ public class MainActivity extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if(location != null){
-                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                    try {
-                        List<Address> addresses = geocoder.getFromLocation(
-                                location.getLatitude(), location.getLongitude(), 1
-                        );
-                        textView1.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Latitude : </b><b></font>"
-                                +addresses.get(0).getLatitude()
-                        ));
-                        textView2.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Longitude : </b><b></font>"
-                                        +addresses.get(0).getLongitude()
-                        ));
-                        textView3.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Country : </b><b></font>"
-                                        +addresses.get(0).getCountryName()
-                        ));
-                        textView4.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Locality : </b><b></font>"
-                                        +addresses.get(0).getLocality()
-                        ));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            Toast.makeText(this, "Allow Location Permission", Toast.LENGTH_SHORT).show();
+        } else {
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    Location location = task.getResult();
+                    if (location != null) {
+                        Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(
+                                    location.getLatitude(), location.getLongitude(), 1
+                            );
+                            textView1.setText(Html.fromHtml(
+                                    "<font color = '#6200E'><b>Latitude : </b><b></font>"
+                                            + addresses.get(0).getLatitude()
+                            ));
+                            textView2.setText(Html.fromHtml(
+                                    "<font color = '#6200E'><b>Longitude : </b><b></font>"
+                                            + addresses.get(0).getLongitude()
+                            ));
+                            textView3.setText(Html.fromHtml(
+                                    "<font color = '#6200E'><b>Country : </b><b></font>"
+                                            + addresses.get(0).getCountryName()
+                            ));
+                            textView4.setText(Html.fromHtml(
+                                    "<font color = '#6200E'><b>Locality : </b><b></font>"
+                                            + addresses.get(0).getLocality()
+                            ));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void startCamera() {
@@ -190,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 imageAnalysis, preview);
 
         capture.setOnClickListener(v -> {
-
+            relativeLayout_main.setVisibility(View.VISIBLE);
             createDefaultFolderIfNotExist();
 //                File file = new File(getBatchDirectoryName(),
 //                        "Test_"+dateFormat.format(new Date())+".jpg");
@@ -209,16 +218,23 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(2000);
+//                                Toast.makeText(MainActivity.this,
+//                                        textView4.getText().toString(),
+//                                        Toast.LENGTH_SHORT).show();
+                                Thread.sleep(1000);
                                 Log.d( "Saved", outputFileResults.getSavedUri().toString());
-                                Toast.makeText(MainActivity.this, "Image Saved",
-                                        Toast.LENGTH_SHORT).show();
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
 
                         }
                     });
+                    prevBmp = previewView.getBitmap();
+                    Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
+                    prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
+                    prevIntent.putExtra("name", file_name);
+                    MainActivity.this.startActivity(prevIntent);
+                    relativeLayout_main.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -229,7 +245,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private String saveBitmap(Bitmap prevBmp) {
+          file_name =  textView3.getText().toString()+"_"+System.currentTimeMillis()
+                +"_"+textView4.getText().toString();
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            prevBmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            FileOutputStream fo = openFileOutput(file_name, Context.MODE_PRIVATE);
+            fo.write(bytes.toByteArray());
+            fo.close();
 
+        }catch (Exception e){
+            e.printStackTrace();
+            file_name = null;
+
+        }
+        return file_name;
+    }
 
 
     public void createDefaultFolderIfNotExist(){
