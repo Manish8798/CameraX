@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if(requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()){
             startCamera();
             getUserLocation();
@@ -303,12 +303,17 @@ public class MainActivity extends AppCompatActivity {
 //            this.finish();
             AlertDialog.Builder alertDialogueBuilder = new AlertDialog.Builder(this);
             alertDialogueBuilder.setTitle("Allow All Permissions");
-            alertDialogueBuilder.setMessage("Restart App!")
+            alertDialogueBuilder.setMessage("Exit App!")
                     .setCancelable(false)
                     .setPositiveButton("Exit", (dialog, which) -> {
                         //code
                         System.exit(0);
-                    }).setNegativeButton("Stay", (dialog, which) -> dialog.cancel());
+                    }).setNegativeButton("Stay", (dialog, which) -> {
+                    dialog.cancel();
+                ActivityCompat.requestPermissions(this, REQ_PERMS,
+                        REQ_CODE_PERMISSION);
+                    });
+
             AlertDialog alertDialog = alertDialogueBuilder.create();
             alertDialog.show();
 
