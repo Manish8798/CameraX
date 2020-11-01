@@ -28,7 +28,7 @@
         <TextView
             android:id="@+id/error_loc"
             android:visibility="gone"
-            android:text="Check Location Settings and Restart"
+            android:text="@string/check_location_settings_and_restart"
             android:textSize="16sp"
             android:gravity="center"
             android:textStyle="bold"
@@ -43,7 +43,7 @@
             android:id="@+id/textView1"
             android:paddingLeft="5dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -51,8 +51,8 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:paddingLeft="5dp"
-            android:layout_alignParentLeft="true"
+            android:paddingStart="5dp"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -61,9 +61,9 @@
 
         <TextView
             android:id="@+id/textView3"
-            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -102,7 +102,7 @@
         android:layout_height="62dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/ic_baseline_folder_24"
-        android:layout_marginLeft="45dp"
+        android:layout_marginStart="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/capture">
 

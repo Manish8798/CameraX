@@ -2,36 +2,37 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="32dp"
-    app:cardCornerRadius="12dp"
-    android:layout_width="wrap_content"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="2.5dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:padding="2dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/image_row"
             android:scaleType="fitXY"
+            android:layout_centerHorizontal="true"
             android:padding="2dp"
             android:adjustViewBounds="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:contentDescription="TODO">
 
         </ImageView>
 
         <TextView
             android:id="@+id/name_row"
-            android:maxLength="20"
             android:fontFamily="sans-serif"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/image_row"
-            android:gravity="center"
-            android:text="name_"
-            android:textSize="16sp">
+            android:gravity="start|center|end"
+            android:text="@string/name_"
+            android:textSize="12sp">
 
         </TextView>
 

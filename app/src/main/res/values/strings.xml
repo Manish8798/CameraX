@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Beadcore Task</string>
+    <string name="name_">name_</string>
+    <string name="check_location_settings_and_restart">Check Location Settings and Restart</string>
 </resources>
