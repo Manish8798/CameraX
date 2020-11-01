@@ -5,7 +5,9 @@
     <gradient android:centerColor="@color/black">
     </gradient>
     <stroke android:color="@color/black"
-        android:width="1dp">
+        android:width="5dp">
     </stroke>
     <solid android:color="@color/grey_blue"> </solid>
+    <size android:width="250dp" android:height="250dp"></size>
+
 </shape>

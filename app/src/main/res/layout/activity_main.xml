@@ -83,12 +83,12 @@
 
     <Button
         android:id="@+id/capture"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="82dp"
+        android:layout_height="82dp"
         android:shadowColor="@color/white"
         android:backgroundTint="@color/white"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/background_btn"
+        android:background="@drawable/ic_baseline_camera_cap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
