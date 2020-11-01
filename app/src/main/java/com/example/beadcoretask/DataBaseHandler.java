@@ -33,7 +33,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             db.execSQL(createTableQuery);
-            Toast.makeText(context, "Table created successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Database created successfully", Toast.LENGTH_SHORT).show();
         }
         catch (Exception e){
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();

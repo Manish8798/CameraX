@@ -32,17 +32,17 @@ public class ImageActivity extends AppCompatActivity {
         dataBaseHandler = new DataBaseHandler(this);
 
         Intent intent = getIntent();
-        name = intent.getStringExtra("name");
+        name = intent.getStringExtra("Bitmap");
         address = intent.getStringExtra("address");
         if(getIntent()!= null){
             try {
+                file_name.setText(name);
                 src = BitmapFactory.decodeStream(openFileInput(name));
+                Glide.with(this).asBitmap().load(src).into(imageView);
             } catch (FileNotFoundException e){
                 e.printStackTrace();
             }
         }
-        file_name.setText(name);
-        Glide.with(this).asBitmap().load(src).into(imageView);
 
         imageView.setOnLongClickListener(v -> {
             Toast.makeText(ImageActivity.this, address, Toast.LENGTH_SHORT).show();
@@ -63,7 +63,7 @@ public class ImageActivity extends AppCompatActivity {
                 dataBaseHandler.storeImage(new ModelClass(name, src));
             }
             else {
-                Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No Image", Toast.LENGTH_SHORT).show();
             }
             Intent backIntent = new Intent(this, MainActivity.class);
             this.startActivity(backIntent);

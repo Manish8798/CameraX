@@ -5,20 +5,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -32,7 +28,6 @@ import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
-import androidx.camera.core.UseCase;
 import androidx.camera.extensions.HdrImageCaptureExtender;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -41,8 +36,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.ByteArrayOutputStream;
@@ -53,7 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -75,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     Bitmap prevBmp;
     String file_name;
     RelativeLayout relativeLayout_main;
-    TextView textView1, textView2, textView3, textView4;
+    TextView textView1, textView2, textView3, textView4, textView_error;
     List<Address> addresses = new ArrayList<>();
     String add = "unknown";
 
@@ -88,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         relativeLayout_main = findViewById(R.id.relative_layout);
         capture = findViewById(R.id.capture);
         gallery = findViewById(R.id.gallery);
+        textView_error = findViewById(R.id.error_loc);
         textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
         textView3 = findViewById(R.id.textView3);
@@ -129,36 +122,33 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Allow Location Permission", Toast.LENGTH_SHORT).show();
         }
         else {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-                    if (location != null) {
-                        Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                        try {
-                            addresses = geocoder.getFromLocation(
-                                    location.getLatitude(), location.getLongitude(), 1
-                            );
-                            textView1.setText(Html.fromHtml(
-                                    "<font color = '#6200E'><b>Latitude : </b><b></font>"
-                                            + addresses.get(0).getLatitude()
-                            ));
-                            textView2.setText(Html.fromHtml(
-                                    "<font color = '#6200E'><b>Longitude : </b><b></font>"
-                                            + addresses.get(0).getLongitude()
-                            ));
-                            textView3.setText(Html.fromHtml(
-                                    "<font color = '#6200E'><b>Country : </b><b></font>"
-                                            + addresses.get(0).getCountryName()
-                            ));
-                            textView4.setText(Html.fromHtml(
-                                    "<font color = '#6200E'><b>Locality : </b><b></font>"
-                                            + addresses.get(0).getLocality()
-                            ));
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                Location location = task.getResult();
+                if (location != null) {
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    try {
+                        addresses = geocoder.getFromLocation(
+                                location.getLatitude(), location.getLongitude(), 1
+                        );
+                        textView1.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Latitude : </b><b></font>"
+                                        + addresses.get(0).getLatitude()
+                        ));
+                        textView2.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Longitude : </b><b></font>"
+                                        + addresses.get(0).getLongitude()
+                        ));
+                        textView3.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Country : </b><b></font>"
+                                        + addresses.get(0).getCountryName()
+                        ));
+                        textView4.setText(Html.fromHtml(
+                                "<font color = '#6200E'><b>Locality : </b><b></font>"
+                                        + addresses.get(0).getLocality()
+                        ));
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -169,15 +159,12 @@ public class MainActivity extends AppCompatActivity {
 
         final ListenableFuture<ProcessCameraProvider>
                 cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);
-        cameraProviderListenableFuture.addListener(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ProcessCameraProvider cameraProvider = cameraProviderListenableFuture.get();
-                    bindPreview(cameraProvider);
-                }catch (ExecutionException | InterruptedException e){
-                    Toast.makeText(MainActivity.this, "Error "+e.toString(), Toast.LENGTH_SHORT).show();
-                }
+        cameraProviderListenableFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderListenableFuture.get();
+                bindPreview(cameraProvider);
+            }catch (ExecutionException | InterruptedException e){
+                Toast.makeText(MainActivity.this, "Error "+e.toString(), Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(this));
     }
@@ -206,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         capture.setOnClickListener(v -> {
             relativeLayout_main.setVisibility(View.VISIBLE);
+            textView_error.setVisibility(View.GONE);
             createDefaultFolderIfNotExist();
 //                File file = new File(getBatchDirectoryName(),
 //                        "Test_"+dateFormat.format(new Date())+".jpg");
@@ -234,27 +222,25 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 //                    });
 
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                add = addresses.get(0).getAddressLine(0);
-                                prevBmp = previewView.getBitmap();
-                                Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
-                                prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
-                                prevIntent.putExtra("name", file_name);
-                                prevIntent.putExtra("address", add);
-                                MainActivity.this.startActivity(prevIntent);
-                                MainActivity.this.finish();
-                            }
-                            catch (Exception e){
-                                e.printStackTrace();
-                                Toast.makeText(MainActivity.this, "Turn Location ON & Restart App", Toast.LENGTH_SHORT).show();
-                            }
+                    activity.runOnUiThread(() -> {
+                        try {
+                            add = addresses.get(0).getAddressLine(0);
+                            prevBmp = previewView.getBitmap();
+                            Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
+                            prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
+//                            saveBitmap(prevBmp);
+//                            prevIntent.putExtra("name", file_name);
+                            prevIntent.putExtra("address", add);
+                            MainActivity.this.startActivity(prevIntent);
+                            MainActivity.this.finish();
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                            textView_error.setVisibility(View.VISIBLE);
+                            Toast.makeText(MainActivity.this, "Turn Location ON & Restart App",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
 
                 }
 
@@ -319,18 +305,10 @@ public class MainActivity extends AppCompatActivity {
             alertDialogueBuilder.setTitle("Allow All Permissions");
             alertDialogueBuilder.setMessage("Restart App!")
                     .setCancelable(false)
-                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //code
-                            System.exit(0);
-                        }
-                    }).setNegativeButton("Stay", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+                    .setPositiveButton("Exit", (dialog, which) -> {
+                        //code
+                        System.exit(0);
+                    }).setNegativeButton("Stay", (dialog, which) -> dialog.cancel());
             AlertDialog alertDialog = alertDialogueBuilder.create();
             alertDialog.show();
 
@@ -344,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
 //        intent.setDataAndType(uri, "image/jpeg");
 //        startActivity(Intent.createChooser(intent, "Gallery"));
 
-        Intent intent = new Intent(this, GalleryAct.class);
+        Intent intent = new Intent(MainActivity.this, GalleryAct.class);
         startActivity(intent);
     }
 
