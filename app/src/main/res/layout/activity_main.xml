@@ -98,10 +98,10 @@
     <Button
         android:id="@+id/gallery"
         android:onClick="gallery"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/ic_baseline_arrow_circle_down_24"
+        android:background="@drawable/ic_baseline_folder_24"
         android:layout_marginLeft="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/capture">

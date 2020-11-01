@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="2dp"
-    android:elevation="12dp"
-    app:cardCornerRadius="6dp"
+    android:elevation="32dp"
+    app:cardCornerRadius="12dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:padding="5dp"
+        android:padding="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image_row"
             android:scaleType="fitXY"
+            android:padding="2dp"
             android:adjustViewBounds="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

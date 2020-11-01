@@ -1,6 +1,7 @@
 package com.example.beadcoretask;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -29,7 +30,7 @@ public class GalleryAct extends AppCompatActivity {
 
         try {
             myAdapter = new MyAdapter(dataBaseHandler.getAllImageData(), this);
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
             recyclerView.setAdapter(myAdapter);
 
         }

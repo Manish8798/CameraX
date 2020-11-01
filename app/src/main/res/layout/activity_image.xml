@@ -9,8 +9,10 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="500dp"
+        android:layout_width="match_parent"
+        android:layout_height="512dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,6 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
+        android:textStyle="normal"
+        android:fontFamily="sans-serif"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/image_view">
 
@@ -38,8 +42,8 @@
         android:layout_marginRight="36dp"
         app:layout_constraintRight_toLeftOf="@+id/guideline2"
         android:background="@drawable/ic_baseline_save_alt_24"
-        android:layout_width="56dp"
-        android:layout_height="56dp">
+        android:layout_width="62dp"
+        android:layout_height="62dp">
 
     </Button>
 
@@ -51,8 +55,8 @@
         android:layout_marginLeft="36dp"
         app:layout_constraintLeft_toRightOf="@+id/guideline2"
         android:background="@drawable/ic_baseline_clear_24"
-        android:layout_width="56dp"
-        android:layout_height="56dp">
+        android:layout_width="62dp"
+        android:layout_height="62dp">
 
     </Button>
 
