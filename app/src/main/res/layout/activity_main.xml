@@ -28,8 +28,8 @@
         <TextView
             android:id="@+id/error_loc"
             android:visibility="gone"
-            android:text="Check Location Settings"
-            android:textSize="20sp"
+            android:text="Check Location Settings and Restart"
+            android:textSize="16sp"
             android:gravity="center"
             android:textStyle="bold"
             android:fontFamily="sans-serif"
@@ -83,22 +83,23 @@
 
     <Button
         android:id="@+id/capture"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:shadowColor="@color/white"
+        android:backgroundTint="@color/white"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/ic_baseline_photo_camera_24"
+        android:background="@drawable/background_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline">
+        app:layout_constraintBottom_toBottomOf="parent">
 
     </Button>
 
     <Button
         android:id="@+id/gallery"
         android:onClick="gallery"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/ic_baseline_arrow_circle_down_24"
         android:layout_marginLeft="45dp"

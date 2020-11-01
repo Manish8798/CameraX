@@ -9,10 +9,12 @@
 
     <ImageView
         android:id="@+id/zoom_image"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="18dp"
         android:layout_marginBottom="172dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +26,9 @@
     <TextView
         android:id="@+id/zoom_name"
         android:layout_marginTop="8dp"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif"
         app:layout_constraintTop_toBottomOf="@+id/zoom_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
