@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                 "<font color = '#6200E'><b>Locality : </b><b></font>"
                                         + addresses.get(0).getLocality()
                         ));
-
+                        textView_error.setVisibility(View.GONE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
                         catch (Exception e){
                             e.printStackTrace();
                             textView_error.setVisibility(View.VISIBLE);
+                            getUserLocation();
                             Toast.makeText(MainActivity.this, "Turn Location ON & Restart App",
                                     Toast.LENGTH_SHORT).show();
                         }
