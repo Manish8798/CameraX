@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         mImageCaptureExecutorService = Executors.newSingleThreadExecutor();
 
+
         if (allPermissionsGranted()) {
             startCamera();
             getUserLocation();
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             add = addresses.get(0).getAddressLine(0);
                             prevBmp = previewView.getBitmap();
+
                             Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
                             prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
 //                            saveBitmap(prevBmp);
@@ -237,9 +239,11 @@ public class MainActivity extends AppCompatActivity {
                         catch (Exception e){
                             e.printStackTrace();
                             textView_error.setVisibility(View.VISIBLE);
-                            getUserLocation();
-                            Toast.makeText(MainActivity.this, "Turn Location ON & Restart App",
+//                            Log.d("L", add);
+                            Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
                                     Toast.LENGTH_SHORT).show();
+                            getUserLocation();
+
                         }
                     });
 
@@ -256,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
     private String saveBitmap(Bitmap prevBmp) {
 
         try {
-            file_name = System.currentTimeMillis()
-                    +"_"+addresses.get(0).getLocality()+"_"+addresses.get(0).getCountryName();
+            file_name = System.currentTimeMillis()+"_"+addresses.get(0).getLatitude()
+                    +addresses.get(0).getLocality()+addresses.get(0).getCountryName();
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             prevBmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -304,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
 //            this.finish();
             AlertDialog.Builder alertDialogueBuilder = new AlertDialog.Builder(this);
             alertDialogueBuilder.setTitle("Allow All Permissions");
-            alertDialogueBuilder.setMessage("Exit App!")
+            alertDialogueBuilder.setMessage("Press EXIT to exit app")
                     .setCancelable(false)
                     .setPositiveButton("Exit", (dialog, which) -> {
                         //code

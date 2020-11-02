@@ -27,10 +27,11 @@
             android:id="@+id/name_row"
             android:fontFamily="sans-serif"
             android:textColor="@color/black"
+            android:maxLines="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/image_row"
-            android:gravity="start|center|end"
+            android:gravity="start"
             android:text="@string/name_"
             android:textSize="12sp">
 
