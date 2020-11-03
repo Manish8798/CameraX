@@ -260,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
     private String saveBitmap(Bitmap prevBmp) {
 
         try {
-            file_name = System.currentTimeMillis()+"_"+addresses.get(0).getLatitude()
-                    +addresses.get(0).getLocality()+addresses.get(0).getCountryName();
+            file_name = System.currentTimeMillis()+"_"+addresses.get(0).getLatitude()+" "
+                    +addresses.get(0).getLocality()+" "+addresses.get(0).getCountryName();
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             prevBmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -269,7 +269,8 @@ public class MainActivity extends AppCompatActivity {
             fo.write(bytes.toByteArray());
             fo.close();
 
-        }catch (Exception e){
+        }
+        catch (Exception e){
             e.printStackTrace();
             file_name = null;
 

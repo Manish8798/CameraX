@@ -39,7 +39,8 @@ public class ImageActivity extends AppCompatActivity {
                 file_name.setText(name);
                 src = BitmapFactory.decodeStream(openFileInput(name));
                 Glide.with(this).asBitmap().load(src).into(imageView);
-            } catch (FileNotFoundException e){
+            }
+            catch (FileNotFoundException e){
                 e.printStackTrace();
             }
         }
