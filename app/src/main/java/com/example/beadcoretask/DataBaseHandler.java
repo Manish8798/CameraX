@@ -86,6 +86,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     modelClassArrayList.add(new ModelClass(nameOfImage, objBitmap));
                 }
 
+                cursor.close();
+                sqLiteDatabase.close();
                 return modelClassArrayList;
             }
             else {
