@@ -4,10 +4,10 @@
 
 <br/>
 
-![](screenshots/cameraX1.jpg){:height="36px" width="36px"}
+![](screenshots/cameraX1.jpg)
 - **It shows location of captured image and preview of captured image so user can save image in SQLite Database or click again.**
 
 <br/>
 
-![](screenshots/cameraX2.jpg){:height="36px" width="36px"}
- - **And location saved as image name in database.**
+![](screenshots/cameraX2.jpg)
+ - **And location coordinates saved as image name in database.**
