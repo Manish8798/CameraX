@@ -1,6 +1,6 @@
 # CameraCL
 
-### It is uses CameraX api to capture images.
+### It uses CameraX api to capture images.
 
 
 
