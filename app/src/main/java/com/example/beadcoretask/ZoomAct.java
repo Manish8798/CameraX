@@ -1,5 +1,6 @@
 package com.example.beadcoretask;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -29,11 +30,13 @@ public class ZoomAct extends AppCompatActivity {
     private static final int DRAG = 1;
     private static final int ZOOM = 2;
     private int mode = NONE;
-    private PointF start = new PointF();
-    private PointF mid = new PointF();
+    private final PointF start = new PointF();
+    private final PointF mid = new PointF();
     float oldDist = 1f;
     private float xCoOrdinate, yCoOrdinate;
 
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,18 +46,21 @@ public class ZoomAct extends AppCompatActivity {
 
         setContentView(R.layout.activity_zoom);
 
+        Bitmap zoomBmp;
 
         ImageView imageView = findViewById(R.id.zoom_image);
         TextView textView_z = findViewById(R.id.zoom_name);
+//        cardView_zoom = findViewById(R.id.card_view_zoomAct);
 
         String name_z = getIntent().getStringExtra("pic");
         if (getIntent() != null){
 
             try {
-                Bitmap zoomBmp = BitmapFactory.decodeStream(openFileInput(name_z));
+                zoomBmp = BitmapFactory.decodeStream(openFileInput(name_z));
                 Glide.with(this).asBitmap().load(zoomBmp).into(imageView);
                 textView_z.setText(name_z);
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -68,6 +74,7 @@ public class ZoomAct extends AppCompatActivity {
 
                 ImageView view = (ImageView) v;
                 view.bringToFront();
+                view.setScaleType(ImageView.ScaleType.MATRIX);
                 viewTransformation(view, event);
 
                 return true;
@@ -88,6 +95,7 @@ public class ZoomAct extends AppCompatActivity {
                 mode = DRAG;
                 lastEvent = null;
                 break;
+
             case MotionEvent.ACTION_POINTER_DOWN:
                 oldDist = spacing(event);
                 if (oldDist > 10f) {
@@ -102,25 +110,30 @@ public class ZoomAct extends AppCompatActivity {
                 lastEvent[3] = event.getY(1);
                 d = rotation(event);
                 break;
+
             case MotionEvent.ACTION_UP:
                 isZoomAndRotate = false;
                 if (mode == DRAG) {
                     float x = event.getX();
                     float y = event.getY();
                 }
+
             case MotionEvent.ACTION_OUTSIDE:
                 isOutSide = true;
                 mode = NONE;
                 lastEvent = null;
+
             case MotionEvent.ACTION_POINTER_UP:
                 mode = NONE;
                 lastEvent = null;
                 break;
+
             case MotionEvent.ACTION_MOVE:
                 if (!isOutSide) {
                     if (mode == DRAG) {
                         isZoomAndRotate = false;
-                        view.animate().x(event.getRawX() + xCoOrdinate).y(event.getRawY() + yCoOrdinate).setDuration(0).start();
+                        view.animate().x(event.getRawX() + xCoOrdinate).y(event.getRawY() + yCoOrdinate)
+                                .setDuration(0).start();
                     }
                     if (mode == ZOOM && event.getPointerCount() == 2) {
                         float newDist1 = spacing(event);
