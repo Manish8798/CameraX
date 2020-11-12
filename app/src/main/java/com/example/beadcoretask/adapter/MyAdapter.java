@@ -18,7 +18,6 @@ import com.example.beadcoretask.ZoomAct;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
