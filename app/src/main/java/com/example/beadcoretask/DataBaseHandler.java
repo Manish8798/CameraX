@@ -34,8 +34,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         try {
             db.execSQL(createTableQuery);
             Toast.makeText(context, "Database created successfully", Toast.LENGTH_SHORT).show();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
@@ -46,7 +45,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void storeImage(ModelClass objectModelClass){
+    public void storeImage(ModelClass objectModelClass) {
         try {
             SQLiteDatabase objectSQLiteDatabase = this.getWritableDatabase();
             Bitmap imageToStoreBitmap = objectModelClass.getImage();
@@ -59,26 +58,24 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             objectContentValues.put("image", imageInBytes);
 
             long check = objectSQLiteDatabase.insert("imageInfo", null, objectContentValues);
-            if (check != -1){
+            if (check != -1) {
                 Toast.makeText(context, "Data added", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(context, "failed to add", Toast.LENGTH_SHORT).show();
             }
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public ArrayList<ModelClass> getAllImageData(){
+    public ArrayList<ModelClass> getAllImageData() {
         try {
             SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
             ArrayList<ModelClass> modelClassArrayList = new ArrayList<>();
             Cursor cursor = sqLiteDatabase.rawQuery("select * from imageInfo", null);
-            if (cursor.getCount() != 0){
-                while (cursor.moveToNext()){
+            if (cursor.getCount() != 0) {
+                while (cursor.moveToNext()) {
                     String nameOfImage = cursor.getString(0);
                     byte[] imageBytes = cursor.getBlob(1);
 
@@ -89,13 +86,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                 cursor.close();
                 sqLiteDatabase.close();
                 return modelClassArrayList;
-            }
-            else {
+            } else {
                 Toast.makeText(context, "No file", Toast.LENGTH_SHORT).show();
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }

@@ -22,6 +22,7 @@ public class ImageActivity extends AppCompatActivity {
     String address, name;
     ImageView imageView;
     DataBaseHandler dataBaseHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,13 +35,12 @@ public class ImageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         name = intent.getStringExtra("Bitmap");
         address = intent.getStringExtra("address");
-        if(getIntent()!= null){
+        if (getIntent() != null) {
             try {
                 file_name.setText(name);
                 src = BitmapFactory.decodeStream(openFileInput(name));
                 Glide.with(this).asBitmap().load(src).into(imageView);
-            }
-            catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -60,17 +60,15 @@ public class ImageActivity extends AppCompatActivity {
 
     public void save_btn(View view) {
         try {
-            if (imageView.getDrawable() != null){
+            if (imageView.getDrawable() != null) {
                 dataBaseHandler.storeImage(new ModelClass(name, src));
-            }
-            else {
+            } else {
                 Toast.makeText(this, "No Image", Toast.LENGTH_SHORT).show();
             }
             Intent backIntent = new Intent(this, MainActivity.class);
             this.startActivity(backIntent);
             this.finish();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

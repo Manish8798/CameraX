@@ -51,14 +51,14 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private final Executor executor = Executors.newSingleThreadExecutor();
+    //    private final Executor executor = Executors.newSingleThreadExecutor();
     private final int REQ_CODE_PERMISSION = 1001;
     private final String[] REQ_PERMS = new String[]{
             "android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION"
     };
 
-//    private List<UseCase> mUseCases;
+    //    private List<UseCase> mUseCases;
     private ExecutorService mImageCaptureExecutorService;
     FusedLocationProviderClient fusedLocationProviderClient;
     PreviewView previewView;
@@ -121,8 +121,7 @@ public class MainActivity extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
 
             Toast.makeText(this, "Allow Location Permission", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                 Location location = task.getResult();
                 if (location != null) {
@@ -164,13 +163,13 @@ public class MainActivity extends AppCompatActivity {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderListenableFuture.get();
                 bindPreview(cameraProvider);
-            }catch (ExecutionException | InterruptedException e){
-                Toast.makeText(MainActivity.this, "Error "+e.toString(), Toast.LENGTH_SHORT).show();
+            } catch (ExecutionException | InterruptedException e) {
+                Toast.makeText(MainActivity.this, "Error " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(this));
     }
 
-     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+    void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         preview = new Preview.Builder().build();
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
@@ -179,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         ImageCapture.Builder builder = new ImageCapture.Builder();
 
         HdrImageCaptureExtender hdrImageCaptureExtender = HdrImageCaptureExtender.create(builder);
-        if(hdrImageCaptureExtender.isExtensionAvailable(cameraSelector)){
+        if (hdrImageCaptureExtender.isExtensionAvailable(cameraSelector)) {
             hdrImageCaptureExtender.enableExtension(cameraSelector);
         }
 
@@ -198,17 +197,17 @@ public class MainActivity extends AppCompatActivity {
             createDefaultFolderIfNotExist();
 //                File file = new File(getBatchDirectoryName(),
 //                        "Test_"+dateFormat.format(new Date())+".jpg");
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-                ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.
-                        OutputFileOptions.Builder(getContentResolver(),
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.
+                    OutputFileOptions.Builder(getContentResolver(),
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build();
 
             imageCapture.takePicture(outputFileOptions, mImageCaptureExecutorService,
                     new ImageCapture.OnImageSavedCallback() {
-                @Override
-                public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                    Activity activity = MainActivity.this;
+                        @Override
+                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                            Activity activity = MainActivity.this;
 //                    activity.runOnUiThread(new Runnable() {
 //                        @Override
 //                        public void run() {
@@ -223,45 +222,44 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 //                    });
 
-                    activity.runOnUiThread(() -> {
-                        try {
-                            add = addresses.get(0).getAddressLine(0);
-                            prevBmp = previewView.getBitmap();
+                            activity.runOnUiThread(() -> {
+                                try {
+                                    add = addresses.get(0).getAddressLine(0);
+                                    prevBmp = previewView.getBitmap();
 
-                            Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
-                            prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
+                                    Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
+                                    prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
 //                            saveBitmap(prevBmp);
 //                            prevIntent.putExtra("name", file_name);
-                            prevIntent.putExtra("address", add);
-                            MainActivity.this.startActivity(prevIntent);
-                            MainActivity.this.finish();
-                        }
-                        catch (Exception e){
-                            e.printStackTrace();
-                            textView_error.setVisibility(View.VISIBLE);
+                                    prevIntent.putExtra("address", add);
+                                    MainActivity.this.startActivity(prevIntent);
+                                    MainActivity.this.finish();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    textView_error.setVisibility(View.VISIBLE);
 //                            Log.d("L", add);
-                            Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
-                                    Toast.LENGTH_SHORT).show();
-                            getUserLocation();
+                                    Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
+                                            Toast.LENGTH_SHORT).show();
+                                    getUserLocation();
 
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onError(@NonNull ImageCaptureException exception) {
+                            exception.printStackTrace();
                         }
                     });
-
-                }
-
-                @Override
-                public void onError(@NonNull ImageCaptureException exception) {
-                    exception.printStackTrace();
-                }
-            });
         });
     }
 
     private String saveBitmap(Bitmap prevBmp) {
 
         try {
-            file_name = System.currentTimeMillis()+"_"+addresses.get(0).getLatitude()+" "
-                    +addresses.get(0).getLocality()+" "+addresses.get(0).getCountryName();
+            file_name = System.currentTimeMillis() + "_" + addresses.get(0).getLatitude() + " "
+                    + addresses.get(0).getLocality() + " " + addresses.get(0).getCountryName();
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             prevBmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -269,8 +267,7 @@ public class MainActivity extends AppCompatActivity {
             fo.write(bytes.toByteArray());
             fo.close();
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             file_name = null;
 
@@ -279,17 +276,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void createDefaultFolderIfNotExist(){
+    public void createDefaultFolderIfNotExist() {
         File picFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        if(!picFolder.exists() && !picFolder.mkdir()){
+        if (!picFolder.exists() && !picFolder.mkdir()) {
             Toast.makeText(this, "failed to create folder", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     private boolean allPermissionsGranted() {
-        for(String permission : REQ_PERMS){
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+        for (String permission : REQ_PERMS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
         }
@@ -300,11 +297,10 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if(requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()){
+        if (requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()) {
             startCamera();
             getUserLocation();
-        }
-        else {
+        } else {
 //            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
 //            this.finish();
             AlertDialog.Builder alertDialogueBuilder = new AlertDialog.Builder(this);
@@ -315,10 +311,10 @@ public class MainActivity extends AppCompatActivity {
                         //code
                         System.exit(0);
                     }).setNegativeButton("Stay", (dialog, which) -> {
-                    dialog.cancel();
+                dialog.cancel();
                 ActivityCompat.requestPermissions(this, REQ_PERMS,
                         REQ_CODE_PERMISSION);
-                    });
+            });
 
             AlertDialog alertDialog = alertDialogueBuilder.create();
             alertDialog.show();
