@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.FileNotFoundException;
 
+
 public class ZoomAct extends AppCompatActivity {
 
     float[] lastEvent = null;
@@ -34,6 +35,7 @@ public class ZoomAct extends AppCompatActivity {
     private final PointF mid = new PointF();
     float oldDist = 1f;
     private float xCoOrdinate, yCoOrdinate;
+    Bitmap zoomBmp = null;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -46,39 +48,32 @@ public class ZoomAct extends AppCompatActivity {
 
         setContentView(R.layout.activity_zoom);
 
-        Bitmap zoomBmp;
-
         ImageView imageView = findViewById(R.id.zoom_image);
         TextView textView_z = findViewById(R.id.zoom_name);
 //        cardView_zoom = findViewById(R.id.card_view_zoomAct);
 
         String name_z = getIntent().getStringExtra("pic");
-        if (getIntent() != null){
+        if (getIntent() != null) {
 
             try {
                 zoomBmp = BitmapFactory.decodeStream(openFileInput(name_z));
                 Glide.with(this).asBitmap().load(zoomBmp).into(imageView);
                 textView_z.setText(name_z);
-            }
-            catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
 
-        imageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        imageView.setOnTouchListener((v, event) -> {
 
-                ImageView view = (ImageView) v;
-                view.bringToFront();
-                view.setScaleType(ImageView.ScaleType.MATRIX);
-                viewTransformation(view, event);
+            ImageView view = (ImageView) v;
+            view.bringToFront();
+//            view.setScaleType(ImageView.ScaleType.MATRIX);
+            viewTransformation(view, event);
 
-                return true;
-            }
+            return true;
         });
 
     }
@@ -144,7 +139,7 @@ public class ZoomAct extends AppCompatActivity {
                         }
                         if (lastEvent != null) {
                             newRot = rotation(event);
-                            view.setRotation((float) (view.getRotation() + (newRot - d)));
+                            view.setRotation((view.getRotation() + (newRot - d)));
                         }
                     }
                 }
