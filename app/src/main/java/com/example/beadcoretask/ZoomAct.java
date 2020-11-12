@@ -50,7 +50,6 @@ public class ZoomAct extends AppCompatActivity {
 
         ImageView imageView = findViewById(R.id.zoom_image);
         TextView textView_z = findViewById(R.id.zoom_name);
-//        cardView_zoom = findViewById(R.id.card_view_zoomAct);
 
         String name_z = getIntent().getStringExtra("pic");
         if (getIntent() != null) {
