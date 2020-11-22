@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,102 +9,104 @@
 
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/relative_layout">
 
     </androidx.camera.view.PreviewView>
 
     <RelativeLayout
         android:id="@+id/relative_layout"
-        android:visibility="gone"
-        android:background="@color/grey_blue"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/grey_blue"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/error_loc"
-            android:visibility="gone"
-            android:text="@string/check_location_settings_and_restart"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/black"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/check_location_settings_and_restart"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone">
 
         </TextView>
 
         <TextView
             android:id="@+id/textView1"
-            android:paddingLeft="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="2dp">
 
         </TextView>
 
         <TextView
             android:id="@+id/textView2"
-            android:paddingStart="5dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView1"
+            android:layout_alignParentStart="true"
+            android:padding="2dp">
 
         </TextView>
 
         <TextView
             android:id="@+id/textView3"
-            android:paddingEnd="5dp"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:padding="2dp"
+            tools:ignore="RelativeOverlap">
 
         </TextView>
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_below="@+id/textView3"
-            android:paddingRight="5dp"
-            android:layout_alignParentRight="true"
+            android:maxLines="1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_alignParentEnd="true"
+            android:padding="2dp">
 
         </TextView>
 
     </RelativeLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/capture"
         android:layout_width="82dp"
         android:layout_height="82dp"
-        android:shadowColor="@color/white"
-        android:backgroundTint="@color/white"
         android:layout_marginBottom="50dp"
-        android:background="@drawable/ic_baseline_camera_cap"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/capture_btn"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
-    </Button>
+    </ImageButton>
 
     <Button
         android:id="@+id/gallery"
-        android:onClick="gallery"
         android:layout_width="62dp"
         android:layout_height="62dp"
+        android:layout_marginStart="45dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/ic_baseline_folder_24"
-        android:layout_marginStart="45dp"
+        android:onClick="gallery"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/capture">
 

@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private ExecutorService mImageCaptureExecutorService;
     FusedLocationProviderClient fusedLocationProviderClient;
     PreviewView previewView;
-    Button capture, gallery;
+    Button gallery;
+    ImageButton capture;
     Preview preview;
     Bitmap prevBmp;
     String file_name;
