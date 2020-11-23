@@ -61,8 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     fo.write(bytes.toByteArray());
                     // remember close file output
                     fo.close();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return save_file;
@@ -74,7 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return null != modelClassList?modelClassList.size():0;
+        return null != modelClassList ? modelClassList.size() : 0;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
