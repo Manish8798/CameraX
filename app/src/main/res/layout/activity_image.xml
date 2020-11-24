@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,13 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="512dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/app_name">
+        app:layout_constraintTop_toTopOf="parent">
 
     </ImageView>
 
@@ -26,40 +26,40 @@
         android:id="@+id/file_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
-        android:gravity="center"
-        android:textStyle="normal"
         android:fontFamily="sans-serif"
+        android:gravity="center"
         android:textSize="16sp"
+        android:textStyle="normal"
         app:layout_constraintTop_toBottomOf="@+id/image_view">
 
     </TextView>
 
     <Button
         android:id="@+id/save_btn"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="52dp"
+        android:background="@drawable/ic_baseline_save_alt_24"
         android:onClick="save_btn"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="52dp"
-        android:layout_marginRight="36dp"
-        app:layout_constraintRight_toLeftOf="@+id/guideline2"
-        android:background="@drawable/ic_baseline_save_alt_24"
-        android:layout_width="62dp"
-        android:layout_height="62dp">
+        app:layout_constraintRight_toLeftOf="@+id/guideline2">
 
     </Button>
 
     <Button
         android:id="@+id/clear_btn"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="52dp"
+        android:background="@drawable/ic_baseline_clear_24"
         android:onClick="clear_btn"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="52dp"
-        android:layout_marginLeft="36dp"
-        app:layout_constraintLeft_toRightOf="@+id/guideline2"
-        android:background="@drawable/ic_baseline_clear_24"
-        android:layout_width="62dp"
-        android:layout_height="62dp">
+        app:layout_constraintLeft_toRightOf="@+id/guideline2">
 
     </Button>
 
