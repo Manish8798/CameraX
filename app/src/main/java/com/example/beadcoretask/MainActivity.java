@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().setStatusBarColor(getResources().getColor(R.color.design_default_color_secondary_variant));
+
         previewView = findViewById(R.id.viewFinder);
         relativeLayout_main = findViewById(R.id.relative_layout);
         capture = findViewById(R.id.capture);
@@ -273,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
                                     Toast.LENGTH_SHORT).show();
                             getUserLocation();
+                            getWindow().setStatusBarColor(getResources().getColor(R.color.design_default_color_error));
 
                         }
                     });
