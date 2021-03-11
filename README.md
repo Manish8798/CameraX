@@ -7,9 +7,9 @@
 
 <br/>
 
-![](screenshots/cameraX1.jpg)
+![](screenshots/cameraCl1.jpeg)
 
 <br/>
 
-![](screenshots/cameraX2.jpg)
+![](screenshots/cameraCl2.jpeg)
 
