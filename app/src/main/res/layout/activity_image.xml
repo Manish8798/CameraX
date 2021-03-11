@@ -8,14 +8,16 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="512dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,44 +26,62 @@
 
     <TextView
         android:id="@+id/file_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        app:layout_constraintTop_toBottomOf="@+id/image_view">
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="#FFFFFF"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
     </TextView>
 
-    <Button
-        android:id="@+id/save_btn"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="52dp"
-        android:background="@drawable/ic_baseline_save_alt_24"
-        android:onClick="save_btn"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/guideline2">
-
-    </Button>
-
-    <Button
-        android:id="@+id/clear_btn"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="36dp"
         android:layout_marginBottom="52dp"
-        android:background="@drawable/ic_baseline_clear_24"
-        android:onClick="clear_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/guideline2">
+        android:background="@color/black"
+        android:alpha="0.8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    </Button>
+        <ImageButton
+            android:id="@+id/save_btn"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginEnd="36dp"
+            android:background="@drawable/ic_baseline_save_alt_24"
+            android:onClick="save_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/guideline2">
+
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/clear_btn"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="36dp"
+            android:background="@drawable/ic_baseline_clear_24"
+            android:onClick="clear_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/guideline2">
+
+        </ImageButton>
+
+    </LinearLayout>
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

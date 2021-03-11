@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,12 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         imageView = findViewById(R.id.image_view);
         file_name = findViewById(R.id.file_name);
+
+        ImageButton saveBtn = findViewById(R.id.save_btn);
+        ImageButton clearBtn = findViewById(R.id.clear_btn);
+
+//        saveBtn.setBackgroundColor(getResources().getColor(R.color.design_default_color_secondary_variant));
+//        clearBtn.setBackgroundColor(getResources().getColor(R.color.design_default_color_secondary_variant));
 
         dataBaseHandler = new DataBaseHandler(this);
 

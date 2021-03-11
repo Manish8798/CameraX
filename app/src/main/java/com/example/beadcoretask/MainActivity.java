@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private ExecutorService mImageCaptureExecutorService;
     FusedLocationProviderClient fusedLocationProviderClient;
     PreviewView previewView;
-    Button gallery;
+    ImageButton gallery;
     ImageButton capture;
     Preview preview;
     Bitmap prevBmp;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getWindow().setStatusBarColor(getResources().getColor(R.color.design_default_color_secondary_variant));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.black));
 
         previewView = findViewById(R.id.viewFinder);
         relativeLayout_main = findViewById(R.id.relative_layout);
