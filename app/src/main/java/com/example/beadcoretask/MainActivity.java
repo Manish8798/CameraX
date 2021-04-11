@@ -71,14 +71,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.relativeLayout.setVisibility(View.GONE);
-        binding.errorLoc.setVisibility(View.GONE);
         getWindow().setStatusBarColor(getResources().getColor(R.color.black));
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mImageCaptureExecutorService = Executors.newSingleThreadExecutor();
 
         if (allPermissionsGranted()) {
             startCamera();
+            getUserLocation();
         } else {
             ActivityCompat.requestPermissions(this, REQ_PERMS,
                     REQ_CODE_PERMISSION);
@@ -139,8 +138,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else {
-                status = false;
             }
         });
     }
@@ -173,16 +170,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final ImageCapture imageCapture = builder
-                .setTargetRotation(this.getWindowManager()
-                        .getDefaultDisplay().getRotation())
-                .build();
+                .setTargetRotation(this.getWindowManager().getDefaultDisplay().getRotation()).build();
 
         preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
-        cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture,
-                imageAnalysis, preview);
+        cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, imageAnalysis, preview);
 
         binding.capture.setOnClickListener(v -> {
-            getUserLocation();
             if (status) {
                 binding.errorLoc.setVisibility(View.GONE);
                 binding.relativeLayout.setVisibility(View.VISIBLE);
@@ -190,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
             }
             if (!status) {
                 locationStatus();
+                getUserLocation();
             }
             createDefaultFolderIfNotExist();
 
@@ -327,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()) {
             startCamera();
+            getUserLocation();
         } else {
 //            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
 //            this.finish();
