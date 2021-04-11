@@ -3,7 +3,6 @@ package com.example.beadcoretask;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,13 +12,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,10 +26,10 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.extensions.HdrImageCaptureExtender;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.beadcoretask.databinding.ActivityMainBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -63,41 +57,28 @@ public class MainActivity extends AppCompatActivity {
     //    private List<UseCase> mUseCases;
     private ExecutorService mImageCaptureExecutorService;
     FusedLocationProviderClient fusedLocationProviderClient;
-    PreviewView previewView;
-    ImageButton gallery;
-    ImageButton capture;
     Preview preview;
     Bitmap prevBmp;
     String file_name;
-    RelativeLayout relativeLayout_main;
-    TextView textView1, textView2, textView3, textView4, textView_error;
     List<Address> addresses = new ArrayList<>();
     String add = "unknown";
+    private ActivityMainBinding binding;
+    private boolean status = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        binding.relativeLayout.setVisibility(View.GONE);
+        binding.errorLoc.setVisibility(View.GONE);
         getWindow().setStatusBarColor(getResources().getColor(R.color.black));
-
-        previewView = findViewById(R.id.viewFinder);
-        relativeLayout_main = findViewById(R.id.relative_layout);
-        capture = findViewById(R.id.capture);
-        gallery = findViewById(R.id.gallery);
-        textView_error = findViewById(R.id.error_loc);
-        textView1 = findViewById(R.id.textView1);
-        textView2 = findViewById(R.id.textView2);
-        textView3 = findViewById(R.id.textView3);
-        textView4 = findViewById(R.id.textView4);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         mImageCaptureExecutorService = Executors.newSingleThreadExecutor();
-
 
         if (allPermissionsGranted()) {
             startCamera();
-            getUserLocation();
         } else {
             ActivityCompat.requestPermissions(this, REQ_PERMS,
                     REQ_CODE_PERMISSION);
@@ -113,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUserLocation() {
+        binding.relativeLayout.setVisibility(View.GONE);
+        binding.errorLoc.setVisibility(View.GONE);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
@@ -126,38 +110,39 @@ public class MainActivity extends AppCompatActivity {
             // for ActivityCompat#requestPermissions for more details.
 
             Toast.makeText(this, "Allow Location Permission", Toast.LENGTH_SHORT).show();
-        } else {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
-                Location location = task.getResult();
-                if (location != null) {
-                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                    try {
-                        addresses = geocoder.getFromLocation(
-                                location.getLatitude(), location.getLongitude(), 1
-                        );
-                        textView1.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Latitude : </b><b></font>"
-                                        + addresses.get(0).getLatitude()
-                        ));
-                        textView2.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Longitude : </b><b></font>"
-                                        + addresses.get(0).getLongitude()
-                        ));
-                        textView3.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Country : </b><b></font>"
-                                        + addresses.get(0).getCountryName()
-                        ));
-                        textView4.setText(Html.fromHtml(
-                                "<font color = '#6200E'><b>Locality : </b><b></font>"
-                                        + addresses.get(0).getLocality()
-                        ));
-                        textView_error.setVisibility(View.GONE);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
         }
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+            Location location = task.getResult();
+            if (location != null && !status) {
+                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                status = true;
+                try {
+                    addresses = geocoder.getFromLocation(
+                            location.getLatitude(), location.getLongitude(), 1
+                    );
+                    binding.textView1.setText(Html.fromHtml(
+                            "<font color = '#6200E'><b>Latitude : </b><b></font>"
+                                    + addresses.get(0).getLatitude()
+                    ));
+                    binding.textView2.setText(Html.fromHtml(
+                            "<font color = '#6200E'><b>Longitude : </b><b></font>"
+                                    + addresses.get(0).getLongitude()
+                    ));
+                    binding.textView3.setText(Html.fromHtml(
+                            "<font color = '#6200E'><b>Country : </b><b></font>"
+                                    + addresses.get(0).getCountryName()
+                    ));
+                    binding.textView4.setText(Html.fromHtml(
+                            "<font color = '#6200E'><b>Locality : </b><b></font>"
+                                    + addresses.get(0).getLocality()
+                    ));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                status = false;
+            }
+        });
     }
 
     private void startCamera() {
@@ -192,13 +177,20 @@ public class MainActivity extends AppCompatActivity {
                         .getDefaultDisplay().getRotation())
                 .build();
 
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
+        preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
         cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture,
                 imageAnalysis, preview);
 
-        capture.setOnClickListener(v -> {
-            relativeLayout_main.setVisibility(View.VISIBLE);
-            textView_error.setVisibility(View.GONE);
+        binding.capture.setOnClickListener(v -> {
+            getUserLocation();
+            if (status) {
+                binding.errorLoc.setVisibility(View.GONE);
+                binding.relativeLayout.setVisibility(View.VISIBLE);
+                getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+            }
+            if (!status) {
+                locationStatus();
+            }
             createDefaultFolderIfNotExist();
 
             //uncomment this to save image in phone storage  without preview
@@ -259,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                     activity.runOnUiThread(() -> {
                         try {
                             add = addresses.get(0).getAddressLine(0);
-                            prevBmp = previewView.getBitmap();
+                            prevBmp = binding.viewFinder.getBitmap();
 
                             Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
                             prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
@@ -270,13 +262,6 @@ public class MainActivity extends AppCompatActivity {
                             MainActivity.this.finish();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            textView_error.setVisibility(View.VISIBLE);
-//                            Log.d("L", add);
-                            Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
-                                    Toast.LENGTH_SHORT).show();
-                            getUserLocation();
-                            getWindow().setStatusBarColor(getResources().getColor(R.color.design_default_color_error));
-
                         }
                     });
 
@@ -289,6 +274,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    private void locationStatus() {
+        binding.relativeLayout.setVisibility(View.VISIBLE);
+        binding.errorLoc.setVisibility(View.VISIBLE);
+        Toast.makeText(MainActivity.this, "Enable GPS & Restart App", Toast.LENGTH_SHORT).show();
+        getWindow().setStatusBarColor(getResources().getColor(R.color.design_default_color_error));
     }
 
     private String saveBitmap(Bitmap prevBmp) {
@@ -335,7 +327,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQ_CODE_PERMISSION && allPermissionsGranted()) {
             startCamera();
-            getUserLocation();
         } else {
 //            Toast.makeText(this, "Allow Permissions", Toast.LENGTH_SHORT).show();
 //            this.finish();
@@ -373,5 +364,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mImageCaptureExecutorService.shutdown();
+        fusedLocationProviderClient.flushLocations();
     }
 }

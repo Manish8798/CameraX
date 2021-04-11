@@ -6,15 +6,13 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.beadcoretask.ModelClass;
-import com.example.beadcoretask.R;
 import com.example.beadcoretask.ZoomAct;
+import com.example.beadcoretask.databinding.RowActivityBinding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -33,16 +31,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.row_activity, parent, false));
+        LayoutInflater inflater = LayoutInflater.from(context);
+        return new MyViewHolder(RowActivityBinding.inflate(inflater, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         ModelClass modelClass = modelClassList.get(position);
-        holder.pic.setImageBitmap(modelClass.getImage());
-        holder.name.setText(modelClass.getImageName());
-        holder.pic.setOnClickListener(new View.OnClickListener() {
+        holder.binding.imageRow.setImageBitmap(modelClass.getImage());
+        holder.binding.nameRow.setText(modelClass.getImageName());
+        holder.binding.imageRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent sendIntent = new Intent(context, ZoomAct.class);
@@ -78,14 +76,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView pic;
-        public TextView name;
+        RowActivityBinding binding;
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            pic = itemView.findViewById(R.id.image_row);
-            name = itemView.findViewById(R.id.name_row);
+        public MyViewHolder(@NonNull RowActivityBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 

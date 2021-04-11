@@ -5,34 +5,27 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.beadcoretask.databinding.ActivityImageBinding;
 
 import java.io.FileNotFoundException;
 
 public class ImageActivity extends AppCompatActivity {
 
-    TextView file_name;
     Bitmap src;
     String address, name;
-    ImageView imageView;
     DataBaseHandler dataBaseHandler;
+    private ActivityImageBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image);
-        imageView = findViewById(R.id.image_view);
-        file_name = findViewById(R.id.file_name);
-
-        ImageButton saveBtn = findViewById(R.id.save_btn);
-        ImageButton clearBtn = findViewById(R.id.clear_btn);
+        binding = ActivityImageBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 //        saveBtn.setBackgroundColor(getResources().getColor(R.color.design_default_color_secondary_variant));
 //        clearBtn.setBackgroundColor(getResources().getColor(R.color.design_default_color_secondary_variant));
@@ -44,15 +37,15 @@ public class ImageActivity extends AppCompatActivity {
         address = intent.getStringExtra("address");
         if (getIntent() != null) {
             try {
-                file_name.setText(name);
+                binding.fileName.setText(name);
                 src = BitmapFactory.decodeStream(openFileInput(name));
-                Glide.with(this).asBitmap().load(src).into(imageView);
+                Glide.with(this).asBitmap().load(src).into(binding.imageView);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
-        imageView.setOnLongClickListener(v -> {
+        binding.imageView.setOnLongClickListener(v -> {
             Toast.makeText(ImageActivity.this, address, Toast.LENGTH_SHORT).show();
             return false;
         });
@@ -67,7 +60,7 @@ public class ImageActivity extends AppCompatActivity {
 
     public void save_btn(View view) {
         try {
-            if (imageView.getDrawable() != null) {
+            if (binding.imageView.getDrawable() != null) {
                 dataBaseHandler.storeImage(new ModelClass(name, src));
             } else {
                 Toast.makeText(this, "No Image", Toast.LENGTH_SHORT).show();
@@ -78,5 +71,13 @@ public class ImageActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
