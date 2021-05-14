@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     List<Address> addresses = new ArrayList<>();
     String add = "unknown";
     private ActivityMainBinding binding;
-    private boolean status = false;
+    private static int check = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +93,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUserLocation() {
-        binding.relativeLayout.setVisibility(View.GONE);
-        binding.errorLoc.setVisibility(View.GONE);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
@@ -112,27 +109,28 @@ public class MainActivity extends AppCompatActivity {
         }
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
             Location location = task.getResult();
-            if (location != null && !status) {
+            if (location != null) {
+                check = 1;
+                binding.errorLoc.setVisibility(View.GONE);
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                status = true;
                 try {
                     addresses = geocoder.getFromLocation(
                             location.getLatitude(), location.getLongitude(), 1
                     );
                     binding.textView1.setText(Html.fromHtml(
-                            "<font color = '#6200E'><b>Latitude : </b><b></font>"
+                            "<font color = '#BDBDBD'><b>Latitude : </b><b></font>"
                                     + addresses.get(0).getLatitude()
                     ));
                     binding.textView2.setText(Html.fromHtml(
-                            "<font color = '#6200E'><b>Longitude : </b><b></font>"
+                            "<font color = '#BDBDBD'><b>Longitude : </b><b></font>"
                                     + addresses.get(0).getLongitude()
                     ));
                     binding.textView3.setText(Html.fromHtml(
-                            "<font color = '#6200E'><b>Country : </b><b></font>"
+                            "<font color = '#BDBDBD'><b>Country : </b><b></font>"
                                     + addresses.get(0).getCountryName()
                     ));
                     binding.textView4.setText(Html.fromHtml(
-                            "<font color = '#6200E'><b>Locality : </b><b></font>"
+                            "<font color = '#BDBDBD'><b>Locality : </b><b></font>"
                                     + addresses.get(0).getLocality()
                     ));
                 } catch (IOException e) {
@@ -143,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startCamera() {
-
         final ListenableFuture<ProcessCameraProvider>
                 cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderListenableFuture.addListener(() -> {
@@ -176,12 +173,11 @@ public class MainActivity extends AppCompatActivity {
         cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, imageAnalysis, preview);
 
         binding.capture.setOnClickListener(v -> {
-            if (status) {
+            if (check == 1) {
                 binding.errorLoc.setVisibility(View.GONE);
                 binding.relativeLayout.setVisibility(View.VISIBLE);
                 getWindow().setStatusBarColor(getResources().getColor(R.color.black));
-            }
-            if (!status) {
+            } else {
                 locationStatus();
                 getUserLocation();
             }
@@ -241,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
                     super.onCaptureSuccess(image);
                     Activity activity = MainActivity.this;
 
-
                     activity.runOnUiThread(() -> {
                         try {
                             add = addresses.get(0).getAddressLine(0);
@@ -270,7 +265,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        allPermissionsGranted();
+    }
+
     private void locationStatus() {
+        check = -1;
         binding.relativeLayout.setVisibility(View.VISIBLE);
         binding.errorLoc.setVisibility(View.VISIBLE);
         Toast.makeText(MainActivity.this, "Enable GPS & Restart App", Toast.LENGTH_SHORT).show();
