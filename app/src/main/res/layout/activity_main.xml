@@ -33,7 +33,7 @@
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:text="@string/check_location_settings_and_restart"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone">

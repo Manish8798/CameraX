@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     List<Address> addresses = new ArrayList<>();
     String add = "unknown";
     private ActivityMainBinding binding;
-    private static int check = -1;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +108,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Allow Location Permission", Toast.LENGTH_SHORT).show();
         }
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
-            Location location = task.getResult();
+            location = task.getResult();
             if (location != null) {
-                check = 1;
                 binding.errorLoc.setVisibility(View.GONE);
                 Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                 try {
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, imageAnalysis, preview);
 
         binding.capture.setOnClickListener(v -> {
-            if (check == 1) {
+            if (location != null) {
                 binding.errorLoc.setVisibility(View.GONE);
                 binding.relativeLayout.setVisibility(View.VISIBLE);
                 getWindow().setStatusBarColor(getResources().getColor(R.color.black));
@@ -272,11 +271,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void locationStatus() {
-        check = -1;
         binding.relativeLayout.setVisibility(View.VISIBLE);
         binding.errorLoc.setVisibility(View.VISIBLE);
-        Toast.makeText(MainActivity.this, "Enable GPS & Restart App", Toast.LENGTH_SHORT).show();
         getWindow().setStatusBarColor(getResources().getColor(R.color.design_default_color_error));
+        Toast.makeText(MainActivity.this, "Enable GPS & Restart App", Toast.LENGTH_SHORT).show();
     }
 
     private String saveBitmap(Bitmap prevBmp) {
@@ -355,6 +353,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, GalleryAct.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
