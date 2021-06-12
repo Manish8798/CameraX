@@ -7,9 +7,13 @@
 
 <br/>
 
-![alt text](screenshots/CameraCl.jpeg "screenshot 1")
+![alt text](screenshots/cameraCL1.jpeg "screenshot 1")
 
 <br/>
 
-![alt text](screenshots/cameraCl2.jpeg "screenshot 2")
+![alt text](screenshots/cameraCL2.jpeg "screenshot 2")
+
+<br/>
+
+![alt text](screenshots/cameraCL3.jpeg "screenshot 3")
 
