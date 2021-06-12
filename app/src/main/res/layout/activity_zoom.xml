@@ -10,11 +10,11 @@
         android:id="@+id/card_view_zoomAct"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginBottom="172dp"
-        android:elevation="45dp"
+        android:elevation="32dp"
         android:padding="2dp"
         app:cardCornerRadius="2dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,11 +26,12 @@
 
             <ImageView
                 android:id="@+id/zoom_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -44,10 +45,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="15dp"
-        android:elevation="25dp"
+        android:layout_marginRight="16dp"
+        android:elevation="24dp"
         android:padding="2dp"
         app:cardCornerRadius="2dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,16 +57,16 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/zoom_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif"
-                android:gravity="start|center|end"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
                 android:textSize="16sp"
                 android:textStyle="normal"
                 app:layout_constraintTop_toTopOf="parent">

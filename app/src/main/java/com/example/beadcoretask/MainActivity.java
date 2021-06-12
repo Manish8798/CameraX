@@ -183,52 +183,54 @@ public class MainActivity extends AppCompatActivity {
             createDefaultFolderIfNotExist();
 
             //uncomment this to save image in phone storage  without preview
+/*
+                File file = new File(getBatchDirectoryName(),
+                        "Test_"+dateFormat.format(new Date())+".jpg");
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.
+                    OutputFileOptions.Builder(getContentResolver(),
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build();
 
-//                File file = new File(getBatchDirectoryName(),
-//                        "Test_"+dateFormat.format(new Date())+".jpg");
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-//            ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.
-//                    OutputFileOptions.Builder(getContentResolver(),
-//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).build();
+            imageCapture.takePicture(outputFileOptions, mImageCaptureExecutorService,
+                    new ImageCapture.OnImageSavedCallback() {
+                        @Override
+                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                            Activity activity = MainActivity.this;
 
-//            imageCapture.takePicture(outputFileOptions, mImageCaptureExecutorService,
-//                    new ImageCapture.OnImageSavedCallback() {
-//                        @Override
-//                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-//                            Activity activity = MainActivity.this;
-//
-//
-//                            activity.runOnUiThread(() -> {
-//                                try {
-//                                    add = addresses.get(0).getAddressLine(0);
-//                                    prevBmp = previewView.getBitmap();
-//
-//                                    Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
-//                                    prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
-////                            saveBitmap(prevBmp);
-////                            prevIntent.putExtra("name", file_name);
-//                                    prevIntent.putExtra("address", add);
-//                                    MainActivity.this.startActivity(prevIntent);
-//                                    MainActivity.this.finish();
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                    textView_error.setVisibility(View.VISIBLE);
-////                            Log.d("L", add);
-//                                    Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
-//                                            Toast.LENGTH_SHORT).show();
-//                                    getUserLocation();
-//
-//                                }
-//                            });
-//
-//                        }
-//
-//                        @Override
-//                        public void onError(@NonNull ImageCaptureException exception) {
-//                            exception.printStackTrace();
-//                        }
-//                    });
+
+                            activity.runOnUiThread(() -> {
+                                try {
+                                    add = addresses.get(0).getAddressLine(0);
+                                    prevBmp = previewView.getBitmap();
+
+                                    Intent prevIntent = new Intent(MainActivity.this, ImageActivity.class);
+                                    prevIntent.putExtra("Bitmap", saveBitmap(prevBmp));
+//                            saveBitmap(prevBmp);
+//                            prevIntent.putExtra("name", file_name);
+                                    prevIntent.putExtra("address", add);
+                                    MainActivity.this.startActivity(prevIntent);
+                                    MainActivity.this.finish();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    textView_error.setVisibility(View.VISIBLE);
+//                            Log.d("L", add);
+                                    Toast.makeText(MainActivity.this, "Enable GPS & Restart App",
+                                            Toast.LENGTH_SHORT).show();
+                                    getUserLocation();
+
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onError(@NonNull ImageCaptureException exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+
+ */
 
             imageCapture.takePicture(mImageCaptureExecutorService, new ImageCapture.OnImageCapturedCallback() {
                 @Override
